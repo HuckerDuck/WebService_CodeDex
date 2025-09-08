@@ -63,7 +63,7 @@ public class JavaMonController {
                         JavaMon.setHp(JavaMon.getHp());
                     }
 
-                    //! Om allt detta är okej så ska den då spara en student
+                    //! Om allt detta är okej så ska den då spara en Javamon
                     JavaMon updatedJavaMon = javaMonRepository.save(JavaMon);
                     return ResponseEntity.ok(updatedJavaMon);
                 })
