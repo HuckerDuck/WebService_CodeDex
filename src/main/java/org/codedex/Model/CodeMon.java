@@ -1,5 +1,6 @@
 package org.codedex.Model;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("JavaMons")
-public class JavaMon {
+public class CodeMon {
     @Id
     private String id;
 
@@ -17,6 +18,11 @@ public class JavaMon {
     @NotBlank (message = "Type cannot be blank")
     private String type;
 
+    @NotNull
+    @Min (value = 1, message = "Number of generation cannot be 0 or less")
+    @Max (value = 5, message = "The maximum amount of generation is 5")
+    private Integer codeMonGeneration;
+
     @NotNull (message = "HP of the JavaMon cannot be null")
     @Min(value = 1, message = "HP number needs to be atleast 1")
     private Integer hp;
@@ -25,15 +31,18 @@ public class JavaMon {
     @Min(value = 1, message = "Attack Damage number needs to be atleast 1")
     private Integer attackdmg;
 
+
     //? Tom konstruktor
-    public JavaMon() {
+    public CodeMon() {
     }
 
     //? Konstruktor med attribut
-    public JavaMon(String id, String name, String type, Integer hp, Integer attackdmg) {
+
+    public CodeMon(String id, String name, String type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.codeMonGeneration = codeMonGeneration;
         this.hp = hp;
         this.attackdmg = attackdmg;
     }
@@ -49,4 +58,6 @@ public class JavaMon {
     public void setHp(Integer hp) {this.hp = hp;}
     public Integer getAttackdmg() {return attackdmg;}
     public void setAttackdmg(Integer attackdmg) {this.attackdmg = attackdmg;}
+    public Integer getCodeMonGeneration() {return codeMonGeneration;}
+    public void setCodeMonGeneration(Integer codeMonGeneration) {this.codeMonGeneration = codeMonGeneration;}
 }
