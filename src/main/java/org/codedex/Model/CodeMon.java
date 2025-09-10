@@ -3,10 +3,13 @@ package org.codedex.Model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.annotation.processing.Generated;
+
 @Document("JavaMons")
 public class CodeMon {
 
     @Id
+
     private String id;
 
     private String name;
