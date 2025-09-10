@@ -11,9 +11,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/javamons")
 public class CodeMonController {
-    @Autowired
-    CodeMonRepository codeMonRepository;
 
+    private final CodeMonRepository codeMonRepository;
+
+    @Autowired
+    public CodeMonController(CodeMonRepository codeMonRepository) {
+        this.codeMonRepository = codeMonRepository;
+    }
 
     //? Metod för att hämta alla
     @GetMapping
