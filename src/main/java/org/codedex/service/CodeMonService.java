@@ -1,16 +1,17 @@
 package org.codedex.service;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
+
 import org.codedex.Model.CodeMon;
 import org.codedex.Model.CodeMonDTO;
 import org.codedex.Repository.CodeMonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class CodeMonService {
     public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) {
         List<CodeMon> codeMons = switch (catargory) {
             case "type" -> codeMonRepository.findByType(value);
-            case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+            // case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
             case "name" -> codeMonRepository.findByName(value);
             default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
         };
@@ -95,6 +96,20 @@ public class CodeMonService {
 
 
     }
+
+    //? Sortera efter hp och generation
+    public Page<CodeMon> getCodeMonsByGenerationAndHp(Integer generation, Pageable pageable) {
+        Pageable sortedPageable = PageRequest.of(
+                //? Skicka in hur många sidor klienten vill ha
+                pageable.getPageNumber(),
+                //? Skicka in hur många hur stor storlek det ska vara på varje sida
+                pageable.getPageSize(),
+                //? Sortera det sedan från störst till minst
+                Sort.by(Sort.Direction.DESC, "hp")
+        );
+        return codeMonRepository.findByCodeMonGeneration(generation, sortedPageable);
+    }
+
 
     private CodeMon codeMonDTOToCodeMon(CodeMonDTO codeMonDTO) {
         CodeMon codeMon = new CodeMon();
@@ -106,5 +121,8 @@ public class CodeMonService {
         return codeMon;
     }
 
-    ;
+
+
+
+
 }
