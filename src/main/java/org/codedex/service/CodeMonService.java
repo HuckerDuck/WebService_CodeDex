@@ -85,32 +85,12 @@ public class CodeMonService {
     }
 
     public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) {
-        List<CodeMon> codeMons = new ArrayList<>();
-        switch (catargory) {
-            case "type":
-                for (CodeMon codeMon : getAll()) {
-                    if (codeMon.getType().equals(value)) {
-                        codeMons.add(codeMon);
-                    }
-                }
-                break;
-            case "codeMonGeneration":
-                for (CodeMon codeMon : getAll()) {
-                    if (codeMon.getCodeMonGeneration().toString().equals(value)) {
-                        codeMons.add(codeMon);
-                    }
-                }
-                break;
-            case "name":
-                for (CodeMon codeMon : getAll()) {
-                    if (codeMon.getName().contains(value)) {
-                        codeMons.add(codeMon);
-                    }
-                }
-                break;
-            default:
-                throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
-        }
+        List<CodeMon> codeMons = switch (catargory) {
+            case "type" -> codeMonRepository.findByType(value);
+            case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+            case "name" -> codeMonRepository.findByName(value);
+            default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
+        };
         return codeMons;
 
 
