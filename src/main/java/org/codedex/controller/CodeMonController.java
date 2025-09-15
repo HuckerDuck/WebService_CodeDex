@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+
 import java.util.List;
 
 @RestController
@@ -87,4 +91,27 @@ public class CodeMonController {
 
     }
 
+    //? Metod för att hämta från en generation och sortera på mest hp.
+    @GetMapping("/generation/{gen}/top-hp")
+    public ResponseEntity<?> getCodeMonByGenerationAndHp(
+            @PathVariable Integer gen,
+             Pageable pageable)
+    {
+        try{
+            Page<CodeMon> codeMonPage = codeMonService.getCodeMonsByGenerationAndHp(gen, pageable);
+
+            if (codeMonPage.isEmpty()) {
+                //? Returnerar svar med 204 om inga CodeMon finns
+                return ResponseEntity.noContent().build();
+            }
+
+            //? Returnera svar med kod 200 och en sida med CodeMon
+            return ResponseEntity.ok(codeMonPage);
+
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No CodeMon found for generation: " + gen);
+
+        }
+    }
 }
