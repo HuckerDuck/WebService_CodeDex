@@ -25,52 +25,66 @@ public class CodeMonController {
 
     //? Metod för att hämta alla
     @GetMapping
-    public List<CodeMon> getAll(){
+    public List<CodeMon> getAll() {
         return codeMonService.getAll();
     }
 
     //? Metod för att hämta en specifik
     @GetMapping("/{id}")
-    public ResponseEntity <?> findCodeMonbyID(@PathVariable String id){
+    public ResponseEntity<?> findCodeMonbyID(@PathVariable String id) {
         try {
             return ResponseEntity.ok(codeMonService.findCodeMonbyID(id));
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    //? Metod för att lägga till en Codemon
+    //? Metod för att lägga till en CodeMon
     @PostMapping
-    public ResponseEntity <CodeMon> save(@Valid @RequestBody CodeMonDTO codeMonDTO){
+    public ResponseEntity<CodeMon> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
 
-           CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
+        CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
 
-           return ResponseEntity.status(201).body(savedCodeMon);
+        return ResponseEntity.status(201).body(savedCodeMon);
 
-           //
+        //
     }
 
     //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity <?> updateACodeMon(@PathVariable String id, @RequestBody
-    CodeMonDTO codeMonInformation){
-        try{
-            CodeMon codeMon = codeMonService.updateACodeMon(id,codeMonInformation);
+    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
+    CodeMonDTO codeMonInformation) {
+        try {
+            CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
             return ResponseEntity.ok(codeMon);
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     //? Ta bort en JavaMon med id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteACodMon(@PathVariable String id){
-        try{
+    public ResponseEntity<Void> deleteACodMon(@PathVariable String id) {
+        try {
             codeMonService.deleteCodeMon(id);
             return ResponseEntity.noContent().build();
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //? Metod för att hämta alla som passar igenom ett filter
+    @GetMapping("/filter/{catargory}/{value}")
+    public ResponseEntity<?> filterCodeMonByCatargory(@PathVariable String catargory, @PathVariable String value) {
+
+        try {
+            List<CodeMon> codeMonList = codeMonService.filterCodeMonByCatargory(catargory, value);
+
+            return ResponseEntity.ok(codeMonList);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 
 }
