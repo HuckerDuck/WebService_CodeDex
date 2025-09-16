@@ -29,6 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(CodeMonControllerTest.TestConfig.class)
 public class CodeMonControllerTest {
 
+    //? Med TestConfiguration kan vi skapa en mock av servicen
+    //? aka en låtsas version av servicen
+
+    //? Utan denna så kommer inte testet att fungera
+    //? Eftersom controllern är beroende av servicen
     @TestConfiguration
     static class TestConfig {
         @Bean
