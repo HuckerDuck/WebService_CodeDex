@@ -82,6 +82,8 @@ public class CodeMonControllerTest {
         testCodeMonC.setHp(200);
     }
 
+    //! Detta Test testar skickar tillbaka ett OK (kod 200) svar och
+    //! en lista med 3 codemons som är sorterade
     @Test
     void testGetCodeMonsByGenerationAndSorting() throws Exception {
         // Skapande av page och listan
@@ -119,6 +121,33 @@ public class CodeMonControllerTest {
                 .andExpect(jsonPath("$.content[2].attackdmg").value(10));
 
 
+    }
+
+    @Test
+    void testGetCodeMonGen1andGetAListDescendingFromAttackDamageExplicit() throws Exception {
+        Page <CodeMon> page = new PageImpl<>(
+                List.of(testCodeMonB, testCodeMonC, testCodeMonA),
+                PageRequest.of(0,3),
+                3
+        );
+
+        //? Mock -> inställningar.
+        //? Vi använder listan över, ställer in controller på Gen 1 och attackdmg
+
+        when(codeMonService.getCodeMonsByGenerationAndSorting(
+                //? Ställer in att kolla mot generation 1
+                eq(1),
+                //? Ställer in den på att kolla mot attackdmg
+                eq("attackdmg"),
+                any(Pageable.class)
+
+        )).thenReturn(page);
+
+        mockMvc.perform(get("/api/javamons/generation/{gen}/top?sortBy=attackdmg", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].attackdmg").value(50))
+                .andExpect(jsonPath("$.content[1].attackdmg").value(30))
+                .andExpect(jsonPath("$.content[2].attackdmg").value(10));
     }
 
 
