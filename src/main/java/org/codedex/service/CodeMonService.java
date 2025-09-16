@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
 @Service
@@ -97,18 +98,34 @@ public class CodeMonService {
 
     }
 
-    //? Sortera efter hp och generation
-    public Page<CodeMon> getCodeMonsByGenerationAndHp(Integer generation, Pageable pageable) {
+    //? Sortera efter hp eller skada (attackdmg)
+    public Page<CodeMon> getCodeMonsByGenerationAndSorting(Integer generation,
+            String sortBy, Pageable pageable) {
+        //? Tillåtna fält som man kan sortera på
+        Set<String> allowedInputs = Set.of("hp", "attackdmg");
+
+        //? Standard som den kommer att sortera efter
+        //? I detta fall är det skada (attackdmg)
+        String defaultSortBy = "attackdmg";
+
+        //? Om sortby, alltså det som användaren lägg in är tom.
+        //? Sortera då på -> attackdmg
+        if (sortBy == null || !allowedInputs.contains(sortBy)) {
+            sortBy = defaultSortBy;
+        }
+
         Pageable sortedPageable = PageRequest.of(
-                //? Skicka in hur många sidor klienten vill ha
                 pageable.getPageNumber(),
-                //? Skicka in hur många hur stor storlek det ska vara på varje sida
                 pageable.getPageSize(),
-                //? Sortera det sedan från störst till minst
-                Sort.by(Sort.Direction.DESC, "hp")
+                Sort.by(sortBy).descending()
         );
+
+
         return codeMonRepository.findByCodeMonGeneration(generation, sortedPageable);
     }
+
+
+
 
 
     private CodeMon codeMonDTOToCodeMon(CodeMonDTO codeMonDTO) {

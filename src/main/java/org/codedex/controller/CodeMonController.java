@@ -91,27 +91,23 @@ public class CodeMonController {
 
     }
 
-    //? Metod för att hämta från en generation och sortera på mest hp.
-    @GetMapping("/generation/{gen}/top-hp")
-    public ResponseEntity<?> getCodeMonByGenerationAndHp(
+    //? Metod för att hämta alla JavaMon av en viss generation
+    //? Baserad på max-hp eller max-attackdmg
+    @GetMapping("/generation/{gen}/top")
+    public ResponseEntity<?> getCodeMonsByGenerationAndSorting(
             @PathVariable Integer gen,
-             Pageable pageable)
+            //? Man behöver inte skriva in men annars kan man skriva in
+            //? hp eller attackdmg
+            @RequestParam(required = false) String sortBy,
+            Pageable pageable)
     {
-        try{
-            Page<CodeMon> codeMonPage = codeMonService.getCodeMonsByGenerationAndHp(gen, pageable);
+        Page<CodeMon> codeMonPage = codeMonService.
+                getCodeMonsByGenerationAndSorting(gen, sortBy, pageable);
 
-            if (codeMonPage.isEmpty()) {
-                //? Returnerar svar med 204 om inga CodeMon finns
-                return ResponseEntity.noContent().build();
-            }
-
-            //? Returnera svar med kod 200 och en sida med CodeMon
-            return ResponseEntity.ok(codeMonPage);
-
+        if (codeMonPage.isEmpty()){
+            return ResponseEntity.noContent().build();
         }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No CodeMon found for generation: " + gen);
 
-        }
+        return ResponseEntity.ok(codeMonPage);
     }
 }
