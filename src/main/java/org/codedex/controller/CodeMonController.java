@@ -38,8 +38,6 @@ public class CodeMonController {
     public ResponseEntity <CodeMon> save(@RequestBody CodeMon codeMon){
            CodeMon savedCodeMon = codeMonRepository.save(codeMon);
            return ResponseEntity.status(201).body(savedCodeMon);
-
-           //
     }
 
     //? Uppdatera delar av en Javamon
