@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,18 +42,19 @@ public class CodeMonController {
 
     //? Metod för att lägga till en CodeMon
     @PostMapping
-    public ResponseEntity<CodeMon> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
 
         CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
 
         return ResponseEntity.status(201).body(savedCodeMon);
+
 
         //
     }
 
     //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
+    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @Valid @RequestBody
     CodeMonDTO codeMonInformation) {
         try {
             CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
@@ -84,7 +86,12 @@ public class CodeMonController {
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
 
+    @GetMapping("/types")
+    public ResponseEntity<List<String>> getAllTypes(@RequestBody(required = false) Integer gen) {
+        List<String> types = codeMonService.getAllTypes(gen);
+        return ResponseEntity.ok(types);
     }
 
 }

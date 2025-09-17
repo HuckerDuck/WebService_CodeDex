@@ -14,7 +14,7 @@ public class CodeMon {
 
     private String name;
 
-    private String type;
+    private CodeMonTyps type;
 
     private Integer codeMonGeneration;
 
@@ -29,7 +29,7 @@ public class CodeMon {
 
     //? Konstruktor med attribut
 
-    public CodeMon( String name, String type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
+    public CodeMon( String name, CodeMonTyps type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
         this.name = name;
         this.type = type;
         this.codeMonGeneration = codeMonGeneration;
@@ -41,8 +41,8 @@ public class CodeMon {
     public String getId() {return id;}
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
-    public String getType() {return type;}
-    public void setType(String type) {this.type = type;}
+    public CodeMonTyps getType() {return type;}
+    public void setType(CodeMonTyps type) {this.type = type;}
     public Integer getHp() {return hp;}
     public void setHp(Integer hp) {this.hp = hp;}
     public Integer getAttackdmg() {return attackdmg;}
