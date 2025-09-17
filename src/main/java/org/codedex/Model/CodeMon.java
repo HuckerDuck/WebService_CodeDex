@@ -32,13 +32,6 @@ public class CodeMon {
 
     //? Konstruktor med attribut
 
-    public CodeMon( String name, CodeMonTyps type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
-        this.name = name;
-        this.type = type;
-        this.codeMonGeneration = codeMonGeneration;
-        this.hp = hp;
-        this.attackdmg = attackdmg;
-    }
     public CodeMon( String name, CodeMonTyps type, Integer codeMonGeneration, Integer hp, Integer attackdmg, Date createdAt) {
         this.name = name;
         this.type = type;

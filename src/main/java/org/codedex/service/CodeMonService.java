@@ -5,13 +5,18 @@ import org.codedex.Model.CodeMonDTO;
 import org.codedex.Model.CodeMonTyps;
 import org.codedex.Repository.CodeMonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
 @Service
@@ -85,7 +90,7 @@ CodeMonService {
     }
 
 
-    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) {
+    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) 
         return switch (catargory) {
             case "type" -> {
                 if (isValidEnum(value)) {
@@ -95,6 +100,7 @@ CodeMonService {
                 }
             }
             case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+
             case "name" -> codeMonRepository.findByName(value);
             default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
         };
@@ -130,6 +136,36 @@ CodeMonService {
         return codeMonRepository.findAllWithCreatedBefore(before);
     }
 
+    //? Sortera efter hp eller skada (attackdmg)
+    public Page<CodeMon> getCodeMonsByGenerationAndSorting(Integer generation,
+            String sortBy, Pageable pageable) {
+        //? Tillåtna fält som man kan sortera på
+        Set<String> allowedInputs = Set.of("hp", "attackdmg");
+
+        //? Standard som den kommer att sortera efter
+        //? I detta fall är det skada (attackdmg)
+        String defaultSortBy = "attackdmg";
+
+        //? Om sortby, alltså det som användaren lägg in är tom.
+        //? Sortera då på -> attackdmg
+        if (sortBy == null || !allowedInputs.contains(sortBy)) {
+            sortBy = defaultSortBy;
+        }
+
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(sortBy).descending()
+        );
+
+
+        return codeMonRepository.findByCodeMonGeneration(generation, sortedPageable);
+    }
+
+
+
+
+
     private CodeMon codeMonDTOToCodeMon(CodeMonDTO codeMonDTO) {
         CodeMon codeMon = new CodeMon();
         codeMon.setName(codeMonDTO.name());
@@ -140,6 +176,7 @@ CodeMonService {
         return codeMon;
     }
 
+
     public boolean isValidEnum(String input) {
         for (CodeMonTyps s : CodeMonTyps.values()) {
             if (s.name().equalsIgnoreCase(input)) {
@@ -148,5 +185,6 @@ CodeMonService {
         }
         return false;
     }
+
 
 }
