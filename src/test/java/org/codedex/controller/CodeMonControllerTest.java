@@ -117,10 +117,16 @@ public class CodeMonControllerTest {
                 // Vi förväntar oss att det finns 3 objekt i
                 //? Vi förväntar oss sedan att första attack numret är 50
                 .andExpect(jsonPath("$.content[0].attackdmg").value(50))
+
                 .andExpect(jsonPath("$.content[1].attackdmg").value(30))
                 .andExpect(jsonPath("$.content[2].attackdmg").value(10));
 
 
+        System.out.println();
+        System.out.println("Testet lyckades");
+        System.out.println("Nummer 0 matchade hp-värdet 50, nummer 1 matchade värdet 30 och nummer 3" +
+                "matchade värdet 10");
+        System.out.println();
     }
 
     @Test
@@ -148,11 +154,13 @@ public class CodeMonControllerTest {
                 .andExpect(jsonPath("$.content[0].attackdmg").value(50))
                 .andExpect(jsonPath("$.content[1].attackdmg").value(30))
                 .andExpect(jsonPath("$.content[2].attackdmg").value(10));
+
+        System.out.println();
+        System.out.println("Testet lyckades");
+        System.out.println("Nummer 0 matchade attackdmg-värdet 50, nummer 1 matchade värdet 30 och nummer 3" +
+                "matchade värdet 10");
+        System.out.println();
     }
-
-
-
-
 }
 
 
