@@ -1,5 +1,6 @@
 package org.codedex.Model;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,10 +10,10 @@ public record CodeMonDTO(
         @NotBlank(message = "Name cannot be blank")
         String name,
 
-        @NotBlank (message = "Type cannot be blank")
-        String type,
+        @NotNull (message = "Invalid type")
+        CodeMonTyps type,
 
-        @NotNull
+        @NotNull (message = "CodeMonGeneration cannot be null")
         @Min(value = 1, message = "Number of generation cannot be 0 or less")
         @Max(value = 5, message = "The maximum amount of generation is 5")
         Integer codeMonGeneration,

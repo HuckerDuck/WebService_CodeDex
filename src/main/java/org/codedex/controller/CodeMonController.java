@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -49,11 +51,12 @@ public class CodeMonController {
         CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
 
         return ResponseEntity.status(201).body(savedCodeMon);
+
     }
 
     //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
+    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @Valid @RequestBody
     CodeMonDTO codeMonInformation) {
         try {
             CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
@@ -85,8 +88,25 @@ public class CodeMonController {
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<List<String>> getAllTypes(@RequestBody(required = false) Integer gen) {
+        List<String> types = codeMonService.getAllTypes(gen);
+        return ResponseEntity.ok(types);
+    }
+
+    @GetMapping("/after")
+    public ResponseEntity<List<CodeMon>> getAllAfter(@RequestBody Date after) {
+        return ResponseEntity.ok(codeMonService.getCodeMonAfter(after));
+    }
+    @GetMapping("/before")
+    public ResponseEntity<List<CodeMon>> getAllBefore(@RequestBody Date before) {
+        return ResponseEntity.ok(codeMonService.getCodeMonAfter(before));
 
     }
+
+
 
     //? Metod för att hämta alla JavaMon av en viss generation
     //? Baserad på max-hp eller max-attackdmg

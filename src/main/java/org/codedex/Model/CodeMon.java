@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.processing.Generated;
+import java.util.Date;
 
 @Document("JavaMons")
 public class CodeMon {
@@ -14,7 +15,7 @@ public class CodeMon {
 
     private String name;
 
-    private String type;
+    private CodeMonTyps type;
 
     private Integer codeMonGeneration;
 
@@ -22,26 +23,33 @@ public class CodeMon {
 
     private Integer attackdmg;
 
+    private Date createdAt;
+
 
     //? Tom konstruktor
     public CodeMon() {
     }
 
     //? Konstruktor med attribut
-    public CodeMon( String name, String type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
+
+    public CodeMon( String name, CodeMonTyps type, Integer codeMonGeneration, Integer hp, Integer attackdmg, Date createdAt) {
         this.name = name;
         this.type = type;
         this.codeMonGeneration = codeMonGeneration;
         this.hp = hp;
         this.attackdmg = attackdmg;
+        this.createdAt = createdAt;
     }
 
     //? Getter & Setter
+
+    public Date getCreatedAt() {return createdAt;}
+    public void setCreatedAt(Date createdAt) {this.createdAt = createdAt;}
     public String getId() {return id;}
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
-    public String getType() {return type;}
-    public void setType(String type) {this.type = type;}
+    public CodeMonTyps getType() {return type;}
+    public void setType(CodeMonTyps type) {this.type = type;}
     public Integer getHp() {return hp;}
     public void setHp(Integer hp) {this.hp = hp;}
     public Integer getAttackdmg() {return attackdmg;}

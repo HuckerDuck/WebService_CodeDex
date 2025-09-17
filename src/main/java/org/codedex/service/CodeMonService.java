@@ -1,8 +1,8 @@
 package org.codedex.service;
 
-
 import org.codedex.Model.CodeMon;
 import org.codedex.Model.CodeMonDTO;
+import org.codedex.Model.CodeMonTyps;
 import org.codedex.Repository.CodeMonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,12 +14,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
 @Service
-public class CodeMonService {
+public class
+CodeMonService {
 
     private final CodeMonRepository codeMonRepository;
 
@@ -36,6 +38,7 @@ public class CodeMonService {
         CodeMon codeMon = codeMonDTOToCodeMon(codeMonDTO);
         codeMon = codeMonRepository.save(codeMon);
         return codeMon;
+
     }
 
     public CodeMon findCodeMonbyID(String id) {
@@ -86,16 +89,51 @@ public class CodeMonService {
                 .orElseThrow(() -> new UsernameNotFoundException("CodeMon not found ID: " + id));
     }
 
-    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) {
-        List<CodeMon> codeMons = switch (catargory) {
-            case "type" -> codeMonRepository.findByType(value);
-            // case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+
+    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) 
+        return switch (catargory) {
+            case "type" -> {
+                if (isValidEnum(value)) {
+                    yield codeMonRepository.findByType(CodeMonTyps.valueOf(value));
+                } else {
+                    throw new UsernameNotFoundException("CodeMon invalid value : " + catargory);
+                }
+            }
+            case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+
             case "name" -> codeMonRepository.findByName(value);
             default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
         };
-        return codeMons;
+    }
 
+    public List<String> getAllTypes() {
+        List<String> message = new ArrayList<>();
+        for (CodeMonTyps type : CodeMonTyps.values()) {
+            List<CodeMon> codeMons = codeMonRepository.findByType(type);
 
+            int numberOfCodeMons = codeMons.size();
+            message.add(type + " : " + numberOfCodeMons);
+        }
+        return message;
+    }
+
+    public List<String> getAllTypes(Integer gen) {
+        List<String> message = new ArrayList<>();
+        if (gen != null) message.add("Gen " + gen + " has");
+        for (CodeMonTyps type : CodeMonTyps.values()) {
+            List<CodeMon> codeMons;
+            if (gen != null) codeMons = codeMonRepository.findByTypeAndCodeMonGeneration(type, gen);
+            else codeMons = codeMonRepository.findByType(type);
+            message.add(type + " : " + codeMons.size());
+        }
+        return message;
+    }
+
+    public List<CodeMon> getCodeMonAfter(Date after) {
+        return codeMonRepository.findAllWithCreatedAfter(after);
+    }
+    public List<CodeMon> getCodeMonBefore(Date before) {
+        return codeMonRepository.findAllWithCreatedBefore(before);
     }
 
     //? Sortera efter hp eller skada (attackdmg)
@@ -139,7 +177,14 @@ public class CodeMonService {
     }
 
 
-
+    public boolean isValidEnum(String input) {
+        for (CodeMonTyps s : CodeMonTyps.values()) {
+            if (s.name().equalsIgnoreCase(input)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
