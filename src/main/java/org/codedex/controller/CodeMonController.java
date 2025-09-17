@@ -1,10 +1,17 @@
 package org.codedex.controller;
 
+import jakarta.validation.Valid;
 import org.codedex.Model.CodeMon;
-import org.codedex.Repository.CodeMonRepository;
+import org.codedex.Model.CodeMonDTO;
+import org.codedex.service.CodeMonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,77 +19,92 @@ import java.util.List;
 @RequestMapping("/api/javamons")
 public class CodeMonController {
 
-    private final CodeMonRepository codeMonRepository;
+    CodeMonService codeMonService;
 
     @Autowired
-    public CodeMonController(CodeMonRepository codeMonRepository) {
-        this.codeMonRepository = codeMonRepository;
+    public CodeMonController(CodeMonService codeMonService) {
+        this.codeMonService = codeMonService;
     }
 
     //? Metod för att hämta alla
     @GetMapping
-    public List<CodeMon> getAll(){
-        return codeMonRepository.findAll();
+    public List<CodeMon> getAll() {
+        return codeMonService.getAll();
     }
 
     //? Metod för att hämta en specifik
     @GetMapping("/{id}")
-    public ResponseEntity <CodeMon> findJavaMonbyID(@PathVariable String id){
-        return codeMonRepository.findById(id)
-                .map(CodeMon -> ResponseEntity.ok(CodeMon))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> findCodeMonbyID(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(codeMonService.findCodeMonbyID(id));
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-    //? Metod för att lägga till en Javamon
+    //? Metod för att lägga till en CodeMon
     @PostMapping
-    public ResponseEntity <CodeMon> save(@RequestBody CodeMon codeMon){
-           CodeMon savedCodeMon = codeMonRepository.save(codeMon);
-           return ResponseEntity.status(201).body(savedCodeMon);
+    public ResponseEntity<CodeMon> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
+
+        CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
+
+        return ResponseEntity.status(201).body(savedCodeMon);
     }
 
-    //? Uppdatera delar av en Javamon
+    //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity <CodeMon> updateAStudent(@PathVariable String id, @RequestBody
-    CodeMon codeMonInformation){
-        return codeMonRepository.findById(id)
-                .map (CodeMon -> {
-
-
-                    //! Kolla att namnet inte är tomt
-                    if (codeMonInformation.getName() != null){
-                        CodeMon.setName(codeMonInformation.getName());
-                    }
-                    //! Kolla att typen av Javamon inte är tomt
-                    if (codeMonInformation.getType() != null){
-                        CodeMon.setType(codeMonInformation.getType());
-                    }
-                    //! Kolla att attack skadan av Javamon inte är tomt
-                    if (codeMonInformation.getAttackdmg() != null){
-                        CodeMon.setAttackdmg(CodeMon.getAttackdmg());
-                    }
-                    //! Kolla att hp:t av Javamon inte är tomt
-                    if (codeMonInformation.getHp() != null){
-                        CodeMon.setHp(CodeMon.getHp());
-                    }
-
-                    //! Om allt detta är okej så ska den då spara en Javamon
-                    CodeMon updatedCodeMon = codeMonRepository.save(CodeMon);
-                    return ResponseEntity.ok(updatedCodeMon);
-                })
-                //? Om studenten inte finns, returnera ett 404 Not Found svar
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
+    CodeMonDTO codeMonInformation) {
+        try {
+            CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
+            return ResponseEntity.ok(codeMon);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     //? Ta bort en JavaMon med id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAStudent(@PathVariable String id){
-        return codeMonRepository.findById(id)
-                .map (CodeMon -> {
-                    codeMonRepository.delete(CodeMon);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                //? Om Javamon inte finns, returnera ett 404 Not Found svar
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Void> deleteACodMon(@PathVariable String id) {
+        try {
+            codeMonService.deleteCodeMon(id);
+            return ResponseEntity.noContent().build();
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    //? Metod för att hämta alla som passar igenom ett filter
+    @GetMapping("/filter/{catargory}/{value}")
+    public ResponseEntity<?> filterCodeMonByCatargory(@PathVariable String catargory, @PathVariable String value) {
+
+        try {
+            List<CodeMon> codeMonList = codeMonService.filterCodeMonByCatargory(catargory, value);
+
+            return ResponseEntity.ok(codeMonList);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+    }
+
+    //? Metod för att hämta alla JavaMon av en viss generation
+    //? Baserad på max-hp eller max-attackdmg
+    @GetMapping("/generation/{gen}/top")
+    public ResponseEntity<?> getCodeMonsByGenerationAndSorting(
+            @PathVariable Integer gen,
+            //? Man behöver inte skriva in men annars kan man skriva in
+            //? hp eller attackdmg
+            @RequestParam(required = false) String sortBy,
+            Pageable pageable)
+    {
+        Page<CodeMon> codeMonPage = codeMonService.
+                getCodeMonsByGenerationAndSorting(gen, sortBy, pageable);
+
+        if (codeMonPage.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(codeMonPage);
+    }
 }
