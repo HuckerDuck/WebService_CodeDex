@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 
@@ -50,8 +49,6 @@ public class CodeMonController {
         CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
 
         return ResponseEntity.status(201).body(savedCodeMon);
-
-        //
     }
 
     //? Uppdatera delar av en CodMon

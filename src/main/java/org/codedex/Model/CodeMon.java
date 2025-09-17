@@ -28,7 +28,6 @@ public class CodeMon {
     }
 
     //? Konstruktor med attribut
-
     public CodeMon( String name, String type, Integer codeMonGeneration, Integer hp, Integer attackdmg) {
         this.name = name;
         this.type = type;
