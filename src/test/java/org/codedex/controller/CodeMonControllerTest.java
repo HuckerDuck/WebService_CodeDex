@@ -43,6 +43,7 @@ class CodeMonControllerTest {
         codeMon2.setAttackdmg(25);
         codeMonList.add(codeMon2);
 
+        //Mock setup:
         // Mock findAll
         when(mockRepo.findAll()).thenReturn(new ArrayList<>(codeMonList));
 
@@ -50,7 +51,7 @@ class CodeMonControllerTest {
         when(mockRepo.findById(anyString())).thenAnswer(invocation -> {
             String id = invocation.getArgument(0);
             return codeMonList.stream()
-                    .filter(cm -> id.equals(cm.getName())) // använder namn som "id" här för enkelhet
+                    .filter(cm -> id.equals(cm.getName()))
                     .findFirst();
         });
 
