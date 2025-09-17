@@ -20,8 +20,7 @@ import java.util.Set;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
 @Service
-public class
-CodeMonService {
+public class CodeMonService {
 
     private final CodeMonRepository codeMonRepository;
 
@@ -90,7 +89,7 @@ CodeMonService {
     }
 
 
-    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) 
+    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value){
         return switch (catargory) {
             case "type" -> {
                 if (isValidEnum(value)) {

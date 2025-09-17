@@ -1,4 +1,4 @@
-package org.codedex.Repositor;
+package org.codedex.Repository;
 import org.codedex.Model.CodeMon;
 import org.codedex.Model.CodeMonTyps;
 import org.springframework.data.mongodb.repository.Aggregation;
