@@ -1,19 +1,21 @@
 package org.codedex.service;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
+
 import org.codedex.Model.CodeMon;
 import org.codedex.Model.CodeMonDTO;
 import org.codedex.Repository.CodeMonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
 @Service
@@ -87,7 +89,7 @@ public class CodeMonService {
     public List<CodeMon> filterCodeMonByCatargory(String catargory, String value) {
         List<CodeMon> codeMons = switch (catargory) {
             case "type" -> codeMonRepository.findByType(value);
-            case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
+            // case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
             case "name" -> codeMonRepository.findByName(value);
             default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
         };
@@ -95,6 +97,36 @@ public class CodeMonService {
 
 
     }
+
+    //? Sortera efter hp eller skada (attackdmg)
+    public Page<CodeMon> getCodeMonsByGenerationAndSorting(Integer generation,
+            String sortBy, Pageable pageable) {
+        //? Tillåtna fält som man kan sortera på
+        Set<String> allowedInputs = Set.of("hp", "attackdmg");
+
+        //? Standard som den kommer att sortera efter
+        //? I detta fall är det skada (attackdmg)
+        String defaultSortBy = "attackdmg";
+
+        //? Om sortby, alltså det som användaren lägg in är tom.
+        //? Sortera då på -> attackdmg
+        if (sortBy == null || !allowedInputs.contains(sortBy)) {
+            sortBy = defaultSortBy;
+        }
+
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(sortBy).descending()
+        );
+
+
+        return codeMonRepository.findByCodeMonGeneration(generation, sortedPageable);
+    }
+
+
+
+
 
     private CodeMon codeMonDTOToCodeMon(CodeMonDTO codeMonDTO) {
         CodeMon codeMon = new CodeMon();
@@ -106,5 +138,8 @@ public class CodeMonService {
         return codeMon;
     }
 
-    ;
+
+
+
+
 }
