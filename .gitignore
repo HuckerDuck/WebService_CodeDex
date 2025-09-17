@@ -38,3 +38,6 @@ out/
 
 # Spring config
 src/main/resources/application.properties
+/.env
+/.dockerignore
+/Dockerfile
