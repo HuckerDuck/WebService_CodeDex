@@ -1,17 +1,12 @@
 package org.codedex.service;
 
-import org.codedex.Model.CodeMon;
-import org.codedex.Model.CodeMonDTO;
-import org.codedex.Model.CodeMonTyps;
-import org.codedex.Repository.CodeMonRepository;
+import org.codedex.Model.*;
+import org.codedex.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,29 +74,25 @@ public class CodeMonService {
     }
 
     public void deleteCodeMon(String id) {
-        codeMonRepository.findById(id)
-                .map(CodeMon -> {
-                    codeMonRepository.delete(CodeMon);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                //? Om Javamon inte finns, returnera ett 404 Not Found svar
+        CodeMon codeMon = codeMonRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("CodeMon not found ID: " + id));
+        codeMonRepository.delete(codeMon);
     }
 
 
-    public List<CodeMon> filterCodeMonByCatargory(String catargory, String value){
-        return switch (catargory) {
+    public List<CodeMon> filterCodeMonByCategory(String category, String value){
+        return switch (category) {
             case "type" -> {
                 if (isValidEnum(value)) {
                     yield codeMonRepository.findByType(CodeMonTyps.valueOf(value));
                 } else {
-                    throw new UsernameNotFoundException("CodeMon invalid value : " + catargory);
+                    throw new UsernameNotFoundException("CodeMon invalid value : " + category);
                 }
             }
             case "codeMonGeneration" -> codeMonRepository.findByCodeMonGeneration(value);
 
             case "name" -> codeMonRepository.findByName(value);
-            default -> throw new UsernameNotFoundException("CodeMon category not found : " + catargory);
+            default -> throw new UsernameNotFoundException("CodeMon category not found : " + category);
         };
     }
 
