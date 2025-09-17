@@ -17,6 +17,12 @@ import java.util.Set;
 @Service
 public class CodeMonService {
 
+    //? Sortera efter hp eller skada (attackdmg)
+    private static final Set<String> ALLOWED_SORT_PROPERTIES = Set.of("hp", "attackdmg");
+
+    //? Standard fältet som kommer att komma in i metod är attackdmg när inget anges
+    private static final String DEFAULT_SORT_PROPERTY = "attackdmg";
+
     private final CodeMonRepository codeMonRepository;
 
     @Autowired
@@ -129,17 +135,11 @@ public class CodeMonService {
     //? Sortera efter hp eller skada (attackdmg)
     public Page<CodeMon> getCodeMonsByGenerationAndSorting(Integer generation,
             String sortBy, Pageable pageable) {
-        //? Tillåtna fält som man kan sortera på
-        Set<String> allowedInputs = Set.of("hp", "attackdmg");
-
-        //? Standard som den kommer att sortera efter
-        //? I detta fall är det skada (attackdmg)
-        String defaultSortBy = "attackdmg";
 
         //? Om sortby, alltså det som användaren lägg in är tom.
         //? Sortera då på -> attackdmg
-        if (sortBy == null || !allowedInputs.contains(sortBy)) {
-            sortBy = defaultSortBy;
+        if (sortBy == null || !ALLOWED_SORT_PROPERTIES.contains(sortBy)) {
+            sortBy = DEFAULT_SORT_PROPERTY;
         }
 
         Pageable sortedPageable = PageRequest.of(

@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-
-
 import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +62,7 @@ public class CodeMonController {
         }
     }
 
-    //? Ta bort en JavaMon med id
+    //? Ta bort en Codemon med id
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteACodMon(@PathVariable String id) {
         try {
