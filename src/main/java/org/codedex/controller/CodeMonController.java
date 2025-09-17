@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,7 +42,7 @@ public class CodeMonController {
 
     //? Metod för att lägga till en CodeMon
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
+    public ResponseEntity<CodeMon> save(@Valid @RequestBody CodeMonDTO codeMonDTO) {
 
         CodeMon savedCodeMon = codeMonService.save(codeMonDTO);
 
@@ -93,5 +93,17 @@ public class CodeMonController {
         List<String> types = codeMonService.getAllTypes(gen);
         return ResponseEntity.ok(types);
     }
+
+    @GetMapping("/after")
+    public ResponseEntity<List<CodeMon>> getAllAfter(@RequestBody Date after) {
+        return ResponseEntity.ok(codeMonService.getCodeMonAfter(after));
+    }
+    @GetMapping("/before")
+    public ResponseEntity<List<CodeMon>> getAllBefore(@RequestBody Date before) {
+        return ResponseEntity.ok(codeMonService.getCodeMonAfter(before));
+
+    }
+
+
 
 }

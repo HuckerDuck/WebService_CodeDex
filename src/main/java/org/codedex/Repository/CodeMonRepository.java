@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,15 @@ public interface CodeMonRepository extends MongoRepository<CodeMon, String> {
     @Aggregation
     List<CodeMon> findByTypeAndCodeMonGeneration(CodeMonTyps type, Integer codeMonGeneration);
 
+
+    @Aggregation(pipeline = {
+            "{'$match': {'createdAt': {'$gte': ?0}}}"
+    })
+    List<CodeMon> findAllWithCreatedAfter(Date createdAfter);
+
+    @Aggregation(pipeline ={
+            "{'$match': {'$createdAt' : {'$lde':?0}}}"
+    })
+    List<CodeMon> findAllWithCreatedBefore(Date createdBefore);
 
 }

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //? När projektet blir större kan vi eventuellt lägga all logik här istället
@@ -122,6 +123,13 @@ CodeMonService {
         return message;
     }
 
+    public List<CodeMon> getCodeMonAfter(Date after) {
+        return codeMonRepository.findAllWithCreatedAfter(after);
+    }
+    public List<CodeMon> getCodeMonBefore(Date before) {
+        return codeMonRepository.findAllWithCreatedBefore(before);
+    }
+
     private CodeMon codeMonDTOToCodeMon(CodeMonDTO codeMonDTO) {
         CodeMon codeMon = new CodeMon();
         codeMon.setName(codeMonDTO.name());
@@ -140,4 +148,5 @@ CodeMonService {
         }
         return false;
     }
+
 }
