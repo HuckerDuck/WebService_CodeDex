@@ -160,7 +160,7 @@ class CodeMonControllerTest {
 
     @Test
     void testSave() throws Exception {
-        CodeMonDTO newCodeMon = new CodeMonDTO("Mockmon", CodeMonTyps.COMPILER, 1, 90, 35);
+        CodeMonDTO newCodeMon = new CodeMonDTO("Mockmon", CodeMonTyps.COMPILER, 1, 90, 35, null);
 
         CodeMon saved = new CodeMon();
         saved.setName("Mockmon");
