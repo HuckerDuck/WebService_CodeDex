@@ -1,20 +1,20 @@
 package org.codedex.controller;
 
 import jakarta.validation.Valid;
-import org.codedex.Model.CodeMon;
-import org.codedex.Model.CodeMonDTO;
-import org.codedex.service.CodeMonService;
+import org.codedex.Model.*;
+import org.codedex.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/javamons")
+@RequestMapping("/codemons/")
 public class CodeMonController {
 
     CodeMonService codeMonService;
@@ -48,8 +48,6 @@ public class CodeMonController {
 
         return ResponseEntity.status(201).body(savedCodeMon);
 
-
-        //
     }
 
     //? Uppdatera delar av en CodMon
@@ -64,7 +62,7 @@ public class CodeMonController {
         }
     }
 
-    //? Ta bort en JavaMon med id
+    //? Ta bort en Codemon med id
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteACodMon(@PathVariable String id) {
         try {
@@ -76,11 +74,11 @@ public class CodeMonController {
     }
 
     //? Metod för att hämta alla som passar igenom ett filter
-    @GetMapping("/filter/{catargory}/{value}")
-    public ResponseEntity<?> filterCodeMonByCatargory(@PathVariable String catargory, @PathVariable String value) {
+    @GetMapping("/filter/{category}/{value}")
+    public ResponseEntity<?> filterCodeMonByCatargory(@PathVariable String category, @PathVariable String value) {
 
         try {
-            List<CodeMon> codeMonList = codeMonService.filterCodeMonByCatargory(catargory, value);
+            List<CodeMon> codeMonList = codeMonService.filterCodeMonByCategory(category, value);
 
             return ResponseEntity.ok(codeMonList);
         } catch (UsernameNotFoundException e) {
@@ -106,4 +104,23 @@ public class CodeMonController {
 
 
 
+    //? Metod för att hämta alla JavaMon av en viss generation
+    //? Baserad på max-hp eller max-attackdmg
+    @GetMapping("/generation/{gen}/top")
+    public ResponseEntity<?> getCodeMonsByGenerationAndSorting(
+            @PathVariable Integer gen,
+            //? Man behöver inte skriva in men annars kan man skriva in
+            //? hp eller attackdmg
+            @RequestParam(required = false) String sortBy,
+            Pageable pageable)
+    {
+        Page<CodeMon> codeMonPage = codeMonService.
+                getCodeMonsByGenerationAndSorting(gen, sortBy, pageable);
+
+        if (codeMonPage.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(codeMonPage);
+    }
 }

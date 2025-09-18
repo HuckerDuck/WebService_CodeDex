@@ -30,6 +30,10 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Enables final classes, methods and statics to be mocked
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+
 }
 
 dependencyManagement {
