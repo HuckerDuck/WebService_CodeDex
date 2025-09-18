@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/codemons/")
+@RequestMapping("/codemons")
 public class CodeMonController {
 
     CodeMonService codeMonService;
