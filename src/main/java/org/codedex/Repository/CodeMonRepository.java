@@ -13,12 +13,15 @@ import java.util.Optional;
 public interface CodeMonRepository extends MongoRepository<CodeMon, String> {
     Optional<CodeMon> findById(String id);
     List<CodeMon> findByType(CodeMonTyps type);
-    List<CodeMon> findByName(String name);
     List<CodeMon> findByCodeMonGeneration(String codeMonGeneration);
+
+    @Aggregation(pipeline = {
+            "{ '$match': { 'name': { '$regex': ?0, '$options': 'i' } } }"
+    })
+    List<CodeMon> findByName(String name);
 
     @Aggregation
     List<CodeMon> findByTypeAndCodeMonGeneration(CodeMonTyps type, Integer codeMonGeneration);
-
 
     @Aggregation(pipeline = {
             "{'$match': {'createdAt': {'$gte': ?0}}}"

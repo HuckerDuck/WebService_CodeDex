@@ -65,6 +65,10 @@ CodeMonService {
                     if (codeMonInformation.hp() != null) {
                         CodeMon.setHp(codeMonInformation.hp());
                     }
+                    //! Kolla att createdAt av Javamon inte är tomt
+                    if (codeMonInformation.createdAt() != null) {
+                        CodeMon.setCreatedAt(codeMonInformation.createdAt());
+                    }
 
                     //! Om allt detta är okej så ska den då spara en Javamon
                     CodeMon updatedCodeMon = codeMonRepository.save(CodeMon);
@@ -100,16 +104,6 @@ CodeMonService {
         };
     }
 
-    public List<String> getAllTypes() {
-        List<String> message = new ArrayList<>();
-        for (CodeMonTyps type : CodeMonTyps.values()) {
-            List<CodeMon> codeMons = codeMonRepository.findByType(type);
-
-            int numberOfCodeMons = codeMons.size();
-            message.add(type + " : " + numberOfCodeMons);
-        }
-        return message;
-    }
 
     public List<String> getAllTypes(Integer gen) {
         List<String> message = new ArrayList<>();

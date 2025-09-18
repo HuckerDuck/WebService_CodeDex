@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Date;
+
 public record CodeMonDTO(
         @NotBlank(message = "Name cannot be blank")
         String name,
@@ -24,7 +26,10 @@ public record CodeMonDTO(
 
         @NotNull (message = "AttackDamage of the JavaMon cannot be null")
         @Min(value = 1, message = "Attack Damage number needs to be atleast 1")
-        Integer attackdmg
+        Integer attackdmg,
+
+        //kan vara null för det görs normalt automatisk bara för uppdatering
+        Date createdAt
 ) {
 
 }
