@@ -52,7 +52,7 @@ public class CodeMonController {
 
     //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @Valid @RequestBody
+    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
     CodeMonDTO codeMonInformation) {
         try {
             CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
@@ -98,7 +98,7 @@ public class CodeMonController {
     }
     @GetMapping("/before")
     public ResponseEntity<List<CodeMon>> getAllBefore(@RequestBody Date before) {
-        return ResponseEntity.ok(codeMonService.getCodeMonAfter(before));
+        return ResponseEntity.ok(codeMonService.getCodeMonBefore(before));
 
     }
 
