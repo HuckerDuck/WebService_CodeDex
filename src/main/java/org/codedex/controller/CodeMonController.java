@@ -52,8 +52,9 @@ public class CodeMonController {
 
     //? Uppdatera delar av en CodMon
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateACodeMon(@PathVariable String id, @RequestBody
-    CodeMonDTO codeMonInformation) {
+    public ResponseEntity<?> updateACodeMon(
+            @PathVariable String id,
+            @Valid @RequestBody CodeMonPatchDTO codeMonInformation) {
         try {
             CodeMon codeMon = codeMonService.updateACodeMon(id, codeMonInformation);
             return ResponseEntity.ok(codeMon);
