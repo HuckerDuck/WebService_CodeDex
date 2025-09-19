@@ -125,7 +125,7 @@ class CodeMonControllerTest {
         when(codeMonService.getAll()).thenReturn(codeMonList);
 
         // Anropa controllerns metod
-        List<CodeMon> result = controller.getAll();
+        List<CodeMon> result = controller.getAll().getBody();
 
         // Assertions
         assertEquals(3, result.size());
@@ -160,7 +160,9 @@ class CodeMonControllerTest {
 
     @Test
     void testSave() throws Exception {
+
         CodeMonDTO newCodeMon = new CodeMonDTO("Mockmon", CodeMonTyps.Compiler, 1, 90, 35, null);
+
 
         CodeMon saved = new CodeMon();
         saved.setName("Mockmon");
