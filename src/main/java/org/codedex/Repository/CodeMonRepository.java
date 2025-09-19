@@ -34,7 +34,7 @@ public interface CodeMonRepository extends MongoRepository<CodeMon, String> {
     List<CodeMon> findAllWithCreatedAfter(Date createdAfter);
 
     @Aggregation(pipeline ={
-            "{'$match': {'$createdAt' : {'$lde':?0}}}"
+            "{'$match': {'createdAt' : {'$lte':?0}}}"
     })
     List<CodeMon> findAllWithCreatedBefore(Date createdBefore);
 
