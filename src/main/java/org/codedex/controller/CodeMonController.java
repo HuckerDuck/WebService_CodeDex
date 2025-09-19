@@ -26,8 +26,8 @@ public class CodeMonController {
 
     //? Metod för att hämta alla
     @GetMapping
-    public List<CodeMon> getAll() {
-        return codeMonService.getAll();
+    public ResponseEntity<List<CodeMon>> getAll() {
+        return ResponseEntity.ok(codeMonService.getAll());
     }
 
     //? Metod för att hämta en specifik

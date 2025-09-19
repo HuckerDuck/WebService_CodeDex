@@ -65,21 +65,21 @@ class CodeMonControllerTest {
 
         TestCodeMonA = new CodeMon();
         TestCodeMonA.setName("TestCodeMonA");
-        TestCodeMonA.setType(CodeMonTyps.COMPILER);
+        TestCodeMonA.setType(CodeMonTyps.Compiler);
         TestCodeMonA.setCodeMonGeneration(1);
         TestCodeMonA.setHp(50);
         TestCodeMonA.setAttackdmg(50);
 
         TestCodeMonB = new CodeMon();
         TestCodeMonB.setName("TestCodeMonB");
-        TestCodeMonB.setType(CodeMonTyps.COMPILER);
+        TestCodeMonB.setType(CodeMonTyps.Compiler);
         TestCodeMonB.setCodeMonGeneration(1);
         TestCodeMonB.setHp(50);
         TestCodeMonB.setAttackdmg(50);
 
         TestCodeMonC = new CodeMon();
         TestCodeMonC.setName("TestCodeMonC");
-        TestCodeMonC.setType(CodeMonTyps.COMPILER);
+        TestCodeMonC.setType(CodeMonTyps.Compiler);
         TestCodeMonC.setCodeMonGeneration(1);
         TestCodeMonC.setHp(50);
         TestCodeMonC.setAttackdmg(50);
@@ -125,7 +125,7 @@ class CodeMonControllerTest {
         when(codeMonService.getAll()).thenReturn(codeMonList);
 
         // Anropa controllerns metod
-        List<CodeMon> result = controller.getAll();
+        List<CodeMon> result = controller.getAll().getBody();
 
         // Assertions
         assertEquals(3, result.size());
@@ -160,11 +160,11 @@ class CodeMonControllerTest {
 
     @Test
     void testSave() throws Exception {
-        CodeMonDTO newCodeMon = new CodeMonDTO("Mockmon", CodeMonTyps.COMPILER, 1, 90, 35);
+        CodeMonDTO newCodeMon = new CodeMonDTO("Mockmon", CodeMonTyps.Compiler, 1, 90, 35);
 
         CodeMon saved = new CodeMon();
         saved.setName("Mockmon");
-        saved.setType(CodeMonTyps.COMPILER);
+        saved.setType(CodeMonTyps.Compiler);
         saved.setCodeMonGeneration(1);
         saved.setHp(90);
         saved.setAttackdmg(35);
@@ -176,7 +176,7 @@ class CodeMonControllerTest {
                         .content(new ObjectMapper().writeValueAsString(newCodeMon)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Mockmon"))
-                .andExpect(jsonPath("$.type").value(CodeMonTyps.COMPILER.name()))
+                .andExpect(jsonPath("$.type").value(CodeMonTyps.Compiler.name()))
                 .andExpect(jsonPath("$.hp").value(90))
                 .andExpect(jsonPath("$.attackdmg").value(35));
     }
