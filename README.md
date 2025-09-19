@@ -45,6 +45,7 @@ src/main/resources/
 ```bash
 # From project root
 ./gradlew bootRun
+```
 
 ### Application properties file
 spring.data.mongodb.uri=<your-mongodb-uri>
