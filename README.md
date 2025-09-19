@@ -11,15 +11,15 @@ Then we use a Frontend to see the CodeMons inside the database and display them
 
 
 ## Project Structure
-src/main/java/org/codedex/
-  controller/   → Rest Controller that send to the database
-  service/      → Uses most of the logic and the if cases that is sent to the controller
-  model/        → Model is what we send to the database 
-  repository/   → Uses a MongoDB repository
-  DTO/ → Is used from model and then to the others. Uses alot of Valid commands
-          that make use that the data enterd is correct, not empty and that for example to hp och the codemon isn't 0
-src/main/resources/
-  application.properties → Configuration (don't add this publicly)
+
+- `src/main/java/org/codedex/controller/` → Rest Controller that send to the database  
+- `src/main/java/org/codedex/service/` → Uses most of the logic and the if cases that is sent to the controller  
+- `src/main/java/org/codedex/model/` → Model is what we send to the database  
+- `src/main/java/org/codedex/repository/` → Uses a MongoDB repository  
+- `src/main/java/org/codedex/dto/` → Is used from model and then to the others. Uses alot of Valid commands that make use that the data enterd is correct,
+-  not empty and that for example to hp och the codemon isn't 0  
+- `src/main/resources/application.properties` → Configuration (don't add this publicly)  
+
 
 ## Tech Stack
 - **Java** (21 is recommended)
