@@ -46,40 +46,39 @@ public class CodeMonService {
                 .orElseThrow(() -> new UsernameNotFoundException("CodeMon not found ID: " + id));
     }
 
-    public CodeMon updateACodeMon(String id, CodeMonDTO codeMonInformation) {
+    public CodeMon updateACodeMon(String id, CodeMonPatchDTO codeMonInformation) {
+        //? Check för att kasta en exception om användaren inte skickar in något alls
+        if (codeMonInformation.getName() == null &&
+            codeMonInformation.getAttackdmg() == null &&
+            codeMonInformation.getCodeMonGeneration() == null &&
+            codeMonInformation.getHp() == null &&
+            codeMonInformation.getCreatedAt() == null &&
+            codeMonInformation.getType() == null
+            ) {
+            throw new IllegalArgumentException("No Update data provided ");
+        }
         return codeMonRepository.findById(id)
-                .map(CodeMon -> {
-
-
-                    //! Kolla att namnet inte är tomt
-                    if (codeMonInformation.name() != null) {
-                        CodeMon.setName(codeMonInformation.name());
+                .map(codeMon -> {
+                    if (codeMonInformation.getName() != null) {
+                        codeMon.setName(codeMonInformation.getName());
                     }
-                    //! Kolla att typen av Javamon inte är tomt
-                    if (codeMonInformation.type() != null) {
-                        CodeMon.setType(codeMonInformation.type());
+                    if (codeMonInformation.getType() != null) {
+                        codeMon.setType(codeMonInformation.getType());
                     }
-                    if (codeMonInformation.codeMonGeneration() != null) {
-                        CodeMon.setCodeMonGeneration(codeMonInformation.codeMonGeneration());
+                    if (codeMonInformation.getCodeMonGeneration() != null) {
+                        codeMon.setCodeMonGeneration(codeMonInformation.getCodeMonGeneration());
                     }
-                    //! Kolla att attack skadan av Javamon inte är tomt
-                    if (codeMonInformation.attackdmg() != null) {
-                        CodeMon.setAttackdmg(codeMonInformation.attackdmg());
+                    if (codeMonInformation.getHp() != null) {
+                        codeMon.setHp(codeMonInformation.getHp());
                     }
-                    //! Kolla att hp:t av Javamon inte är tomt
-                    if (codeMonInformation.hp() != null) {
-                        CodeMon.setHp(codeMonInformation.hp());
+                    if (codeMonInformation.getAttackdmg() != null) {
+                        codeMon.setAttackdmg(codeMonInformation.getAttackdmg());
                     }
-                    //! Kolla att createdAt av Javamon inte är tomt
-                    if (codeMonInformation.createdAt() != null) {
-                        CodeMon.setCreatedAt(codeMonInformation.createdAt());
+                    if (codeMonInformation.getCreatedAt() != null) {
+                        codeMon.setCreatedAt(codeMonInformation.getCreatedAt());
                     }
-
-                    //! Om allt detta är okej så ska den då spara en Javamon
-                    CodeMon updatedCodeMon = codeMonRepository.save(CodeMon);
-                    return updatedCodeMon;
+                    return codeMonRepository.save(codeMon);
                 })
-                //? Om studenten inte finns, returnera ett 404 Not Found svar
                 .orElseThrow(() -> new UsernameNotFoundException("CodeMon not found ID: " + id));
     }
 
